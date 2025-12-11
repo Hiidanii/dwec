@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Ejercicio 1</title>
+	</head>
+<body>
+
+<h2>Bucles for con un objeto</h2>
+<p id="demo"></p>
+
+<script>
+var myArra = [
+    {
+        "id": "01",
+        "pais": "España"
+    },
+    {
+        "id": "02",
+        "pais": "Francia"
+    },
+    {
+        "id":"03",
+        "pais": "Italia"
+    },
+    {
+        "id":"04",
+        "pais": "Portugal"
+    },
+    {
+        "id":"05",
+        "pais": "Alemania"
+    },
+    {
+        "id":"06",
+        "pais": "Polonia"
+    },
+    {
+        "id":"07",
+        "pais": "Dinamarca"
+    },
+    {
+        "id":"08",
+        "pais": "Suecia"
+    },
+    {
+        "id":"09",
+        "pais": "Rusia"
+    },
+    {
+        "id":"10",
+        "pais": "USA"
+    },
+    {
+        "id":"11",
+        "pais": "Canada"
+    }
+];
+
+	var texto=""
+			
+	/* myArra: Array(11)
+		{0:id: '01', pais: 'España'}
+		1:{id: '02', pais: 'Francia'}
+		2:{id: '03', pais: 'Italia'}
+		...
+	*/
+	//Si usamos el bucle for clásico
+	//Si funciona 
+	for (let i=0; i < myArra.length; i++) {
+		/*
+		myArra[i]:Object
+		id:"01"
+		pais:"España"
+		*/
+		texto += myArra[i].pais + ", ";
+	}
+	
+	texto += "<br>"
+
+	//Si usamos el bucle for ... of ...
+	//Sí funciona
+	for (let p of myArra){
+		/*
+		p:Object
+		id:"01"
+		pais:"España"
+		*/
+		texto += p.pais + ", "
+	}
+
+	texto += "<br>"
+
+	//Si usamos el bucle for ... in ...
+	//Si funciona usandolo como un array al acceder a los datos
+	for (let p in myArra){
+		/*
+		p:0..10
+		*/
+		texto += myArra[p].pais + ", "
+	}
+
+    document.getElementById("demo").innerHTML = texto;
+ 
+</script>
+
+</body>
+</html>

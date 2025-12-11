@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Ejercicio 1.5 - JSON Ajax asíncrono</title>
+	<script type="text/javascript" src="index.js"></script>
+	<style>
+	#resultados{
+		background: yellow;
+	}
+	</style>
+</head>
+
+<body>
+	<h2>Marca los datos que quieres que se muestren</h2>
+	<form id="form">
+		<input type="checkbox"  value="NOMBRE" id="nombre" />Nombre<br/>
+	    <input type="checkbox"  value="CURSO" id="curso" />Curso<br/>
+	    <input type="checkbox"  value="HORAS" id="horas" />Horas<br/>
+	    <input type="checkbox"  value="PROFESOR" id="profesor" />Profesor<br/>
+	</form>
+    <input type="button" value="Enviar" id="enviar">
+	<p>A continuación se cargarán por AJAX los datos recibidos en la solicitud ASINCRONA:</p>
+	<div id="resultados"></div>
+	<div id="indicador"></div>
+</body>
+</html>

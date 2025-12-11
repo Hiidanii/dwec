@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<title>Ejercicio 1</title>
+	</head>
+<body>
+
+<h2>Bucles for con un objeto</h2>
+<p id="demo"></p>
+
+<script>
+var myObj = { 
+    "01": "España", 
+    "02": "Francia",
+    "03": "Italia",
+    "04": "Portugal",
+    "05": "Alemania",
+    "06": "Polonia",
+    "07": "Dinamarca",
+    "08": "Suecia",
+    "09": "Rusia",
+    "10": "USA",
+    "11": "Canada"
+};
+
+    var texto=""
+			
+		//Si usamos el bucle for clásico
+		//No funciona pues no es un array
+		for (let i=0; i < myObj.length; i++) {
+			texto += myObj[i];
+		}
+
+		//Si usamos el bucle for ... of ...
+    //Nos dará error, diciendo que resultados no es iterable
+    //Ya que la respuesta del servidor es un objeto, y no un array de objetos.
+		/*
+			for (let pais of resultados){
+					texto += pais + ", "
+				}
+		*/
+			
+		//Para que salga en el orden de las propiedades (keys) del objeto 
+		//tendremos que ordenarlo y usar el for..of
+		texto += "<br>** For..of (2) (sin ordenar)<br>"
+		//El método Object.keys() devuelve un objeto Array Iterator con las claves de un objeto.
+		let props = Object.keys(myObj);
+		for (let key of props) {
+		  let value = myObj[key];
+		  texto += value + " ("+key+"), "
+		}
+
+
+		//Sin embargo si usamos el bucle for ... in ...
+    //Sí nos mostrará los datos, ya que el "for in" va mostrando
+    //el valor de cada uno de los atributos del objeto, aunque 
+		//no en el orden deseado
+		texto += "<br><br>** For.in (sin ordenar)<br>"
+		for (var i in myObj){
+			texto += myObj[i] + " ("+i+"), "
+		}
+
+		//Para que salga en el orden de las propiedades (keys) del objeto 
+		//tendremos que ordenarlo y usar el for..of
+		texto += "<br><br>** For..of (ordenado)<br>"
+		let keys = Object.keys(myObj);
+		for (let key of keys.sort()) {
+		  let value = myObj[key];
+		  texto += value + " ("+key+"), "
+		}
+
+    document.getElementById("demo").innerHTML = texto;
+ 
+</script>
+
+</body>
+</html>

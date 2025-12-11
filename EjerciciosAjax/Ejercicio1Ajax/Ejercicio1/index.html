@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Ejercicio 1.1 - JSON Ajax asíncrono</title>
+	<script type="text/javascript" src="index.js"></script>
+	<style>
+	#resultados{
+		background: yellow;
+	}
+	</style>
+</head>
+
+<body>
+
+<div>
+<!--Formulario para recoger los datos introducidos por el usuario, para enviarlos creamos evento click en el boton -->
+	<form>
+		Campo: <select name="campo" id="campo">
+			<option value="id">ID</option>
+			<option value="nombrecentro">Nombre Centro</option>
+			<option value="localidad">Localidad</option>
+			<option value="provincia">Provincia</option>
+			<option value="telefono" >Telefono</option>
+			<option value="fechavisita">FechaVisita</option>
+			<option value="numvisita">Numero visitas</option>
+		</select>
+		Valor: <input type="text" name="valor" id="valor">
+		<input type="button" value="Enviar" id="enviar">
+		<!--
+			CUIDADO CON LA SIGUIENTE LINEA:
+			<button id="enviar">Enviar</button>
+
+			Al no poner el tipo del botón por defecto se crea de tipo submit, lo que provoca una recarga de la página
+			y hará que no funcione nuestra app ajax
+
+			Se debería poner así:
+			<button id="enviar" type="button">Enviar</button>
+		-->
+	</form>
+
+</div>
+<p> A continuación se cargarán por AJAX los datos recibidos en la solicitud ASINCRONA:<br/></p>
+<div id="resultados"></div>
+<div id="indicador"></div>
+</body>
+</html>

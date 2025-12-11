@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación del Tiempo - AJAX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Aplicación del Tiempo (5 días)</h1>
+        <p>Elige una comunidad y una provincia para ver el pronóstico.</p>
+
+        <div class="controls">
+            <label for="comunidad">Comunidad:</label>
+            <select id="comunidad">
+                <option value="">Seleccione una comunidad</option>
+            </select>
+
+            <label for="provincia">Provincia:</label>
+            <select id="provincia">
+                <option value="">Seleccione una provincia</option>
+            </select>
+        </div>
+
+        <div id="tarjeta-tiempo" class="tarjeta"></div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

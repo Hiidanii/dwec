@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica</title>
+    <script>
+        window.onload = function() {
+            var juegos = {
+                "01": "The Legend of Zelda",
+                "02": "Super Mario Bros",
+                "03": "Minecraft",
+                "04": "Fortnite",
+                "05": "Call of Duty",
+                "06": "Among Us",
+                "07": "Animal Crossing",
+                "08": "Cyberpunk 2077",
+                "09": "God of War",
+                "10": "Red Dead Redemption 2"
+            }
+
+            var texto = "<h1>Práctica de bucles for con un objeto</h1>";
+
+            // Usando un bucle for...on con Object.keys()
+            // Explicación: El método Object.keys() devuelve un array con las claves del objeto.
+            texto += "<h2>Listado de juegos (usando for...on con Object.keys())</h2><ul>";
+            let keys = Object.keys(juegos);
+            for (let key of keys) {
+                texto += "<li>" + juegos[key] + " (ID: " + key + ")</li>";
+            }
+            texto += "</ul>";
+
+
+            // Usando un bucle for...in directamente sobre el objeto
+            // Explicación: El bucle for...in itera sobre todas las propiedades enumerables del objeto.
+            texto += "<h2>Listado de juegos (usando for...in directamente)</h2><ul>";
+            for (let id in juegos) {
+                texto += "<li>" + juegos[id] + " (ID: " + id + ")</li>";
+            }
+            texto += "</ul>";
+
+            // Bucle for...on con Object.keys() ordenado alfabéticamente
+            texto += "<h2>Listado de juegos ordenados alfabéticamente</h2><ul>";
+            keys = Object.keys(juegos).sort();
+            for (let key of keys) {
+                texto += "<li>" + juegos[key] + " (ID: " + key + ")</li>";
+            }
+            texto += "</ul>";   
+
+            document.body.innerHTML = texto;
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

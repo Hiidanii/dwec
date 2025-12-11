@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica</title>
+    <script>
+        window.onload = function() {
+            var peliculas = [
+                {
+                    "id": "01",
+                    "pelicula": "El Padrino"
+                },
+                {
+                    "id": "02",
+                    "pelicula": "Forrest Gump"
+                },
+                {
+                    "id":"03",
+                    "pelicula": "La lista de Schindler"
+                },
+                {
+                    "id":"04",
+                    "pelicula": "El caballero oscuro"
+                },
+                {                    
+                    "id":"05",
+                    "pelicula": "Pulp Fiction"
+                },
+                {
+                    "id":"06",
+                    "pelicula": "El señor de los anillos: El retorno del rey"
+                },
+                {
+                    "id":"07",
+                    "pelicula": "Fight Club"
+                },
+                {
+                    "id":"08",
+                    "pelicula": "Inception"
+                },
+                {
+                    "id":"09",
+                    "pelicula": "El bueno, el feo y el malo"
+                },
+                {
+                    "id":"10",
+                    "pelicula": "Matrix"
+                }
+            ];
+
+            var texto = "<h1>Práctica de bucles for con un array de objetos</h1>";
+            
+            // Usando un bucle for clásico
+            // Explicación: El bucle for clásico itera usando un índice numérico
+            texto += "<strong>Bucle for clásico</strong> <br>";
+            for (var i = 0; i < peliculas.length; i++) {
+                texto += "ID: " + peliculas[i].id + " - Película: " + peliculas[i].pelicula + "<br>";
+            }
+            texto += "<br> <hr> <br>";
+
+            // Usando un bucle for...of
+            // Explicación: El bucle for...of itera directamente sobre los elementos del array
+            texto += "<strong>Bucle for...of</strong> <br>";
+            for (var pelicula of peliculas) {
+                texto += "ID: " + pelicula.id + " - Película: " + pelicula.pelicula + "<br>";
+            }
+            texto += "<br> <hr> <br>";
+
+            // Usando un bucle for...in
+            // Explicación: El bucle for...in recorre los índices del array
+            texto += "<strong>Bucle for...in</strong> <br>";
+            for (var index in peliculas) {
+                texto += "ID: " + peliculas[index].id + " - Película: " + peliculas[index].pelicula + "<br>";
+            }
+
+            document.body.innerHTML = texto;
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

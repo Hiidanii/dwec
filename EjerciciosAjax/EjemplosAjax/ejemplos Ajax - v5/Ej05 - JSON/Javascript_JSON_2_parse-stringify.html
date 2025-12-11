@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Ejemplo JSON - parse y stringify</title>
+</head>
+
+<body>
+    <div id="demo" />
+    <!-- JSON (Javascript Object Notation)
+        - parse: convierte de cadena de texto a objeto JSON.
+        - stringify: convierte de objeto JSON a cadena. 
+    -->
+    <script>
+  
+        var cadenaJSON = '{"nombre": "Oscar","nacimiento": 1975,"pais": "España"}';
+
+        document.write (typeof cadenaJSON);
+
+        var personaJSON = JSON.parse(cadenaJSON);
+
+        document.write (typeof personaJSON);
+
+        var stringJSON = JSON.stringify (personaJSON);
+
+        document.write (typeof stringJSON);
+
+ 
+    </script>
+
+</body>
+
+</html>

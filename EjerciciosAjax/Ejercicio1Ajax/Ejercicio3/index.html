@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Ejercicio 1.3 - JSON Ajax asíncrono</title>
+	<script type="text/javascript" src="index.js"></script>
+
+	<style>
+	#resultados{
+		background: yellow;
+	}
+	</style>
+</head>
+
+<body>
+	<table>
+		<!--Formulario para recoger los datos introducidos por el usuario, para enviarlos creamos evento click en el boton -->
+		<form>
+		<tr>
+			<td><label for="nombre">Nombre</label></td>
+			<td><input type="text" name="nombre" id="nombre"></td>
+		</tr>
+		<tr>
+			<td><label for="localidad">Localidad</label></td>
+			<td><input type="text" name="local" id="localidad"></td>
+		</tr>
+		<tr>
+			<td><label for="provincia">Provincia</label></td>
+			<td><input type="text" name="prov" id="provincia"></td>
+		</tr>
+		<tr>
+			<td><label for="telefono">Telefono</label></td>
+			<td><input type="text" name="tfno" id="telefono"></td>
+		</tr>
+		<tr>
+			<td><label for="fecha">Fecha</label></td>
+			<td><input type="text" name="fech" id="fecha"> (aaaa-mm-dd)</td>
+		</tr>
+		<tr>
+			<td><label for="visitas">Visitas</label></td>
+			<td><input type="text" name="numv" id="visitas"></td>
+		</tr>
+		
+		<tr><td><input type="button" value="Insertar" id="enviar"></td></tr>
+				
+		</form>
+
+	</table>
+	<p>A continuación se cargarán por AJAX los datos recibidos en la solicitud ASINCRONA:</p>
+	<div id="resultados"></div>
+	<div id="indicador"></div>
+</body>
+</html>
