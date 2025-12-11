@@ -70,16 +70,32 @@ document.addEventListener("DOMContentLoaded", function() {
         for (let i = 0; i < data.list.length; i += 8) {
             let pronostico = data.list[i];
             let fecha = new Date(pronostico.dt * 1000);
+            // Obtener código de icono y URL (OpenWeatherMap)
+            const iconCode = pronostico.weather && pronostico.weather[0] ? pronostico.weather[0].icon : null;
+            const iconUrl = iconCode ? `https://openweathermap.org/img/wn/${iconCode}@2x.png` : '';
+
             let card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <h3>${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}</h3>
+                <div class="card-header">
+                    ${iconUrl ? `<img src="${iconUrl}" alt="${pronostico.weather[0].description}" class="weather-icon">` : ''}
+                    <div>
+                        <h3>${diaSemana(fecha)} (${fecha.toLocaleDateString()})</h3>
+                        <h4>${fecha.toLocaleTimeString()}</h4>
+                    </div>
+                </div>
                 <p>Temperatura: ${pronostico.main.temp} °C</p>
-                <p>Clima: ${pronostico.weather[0].description}</p>
+                <p style="text-transform: capitalize;">Clima: ${pronostico.weather[0].description}</p>
                 <p>Humedad: ${pronostico.main.humidity}%</p>
                 <p>Viento: ${pronostico.wind.speed} m/s</p>
             `;
             tarjetaTiempo.appendChild(card);
         }
-    }   
+    }
+    
+    // Función para obtener el nombre del día de la semana
+    function diaSemana(fecha) {
+        const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        return dias[fecha.getDay()];
+    }
 });
