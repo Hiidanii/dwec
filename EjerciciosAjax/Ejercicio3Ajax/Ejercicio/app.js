@@ -98,17 +98,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Construye la URL del endpoint 5-day/3-hour de OpenWeatherMap para la provincia seleccionada
         const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(provincia)},ES&appid=${API_KEY}&units=metric&lang=es`;
-        fetch(url)
-            .then(response => {
-                if (!response.ok) throw new Error(response.status + ' ' + response.statusText);
-                return response.json();
-            })
-            .then(data => mostrarTiempo(data))
-            .catch(error => {
-                // Muestra un error legible para el usuario y registra detalles técnicos en consola
-                tarjetaTiempo.innerHTML = `<p class="error">Error al obtener los datos del tiempo: ${error.message}</p>`;
-                console.error('Error al obtener los datos del tiempo:', error);
-            });
+        
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        mostrarTiempo(data);
+                    } catch (e) {
+                        tarjetaTiempo.innerHTML = `<p class="error">Error al procesar la respuesta: ${e.message}</p>`;
+                        console.error('Error parseando JSON:', e);
+                    }
+                } else {
+                    tarjetaTiempo.innerHTML = `<p class="error">Error al obtener los datos del tiempo: ${xhr.status} ${xhr.statusText}</p>`;
+                    console.error('XHR error:', xhr.status, xhr.statusText, xhr.responseText);
+                }
+            }
+        };
+        xhr.send();
     }
 
     // Renderiza la respuesta de la API en tarjetas visuales.
