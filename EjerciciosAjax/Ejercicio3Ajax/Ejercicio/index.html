@@ -4,23 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicación del Tiempo - AJAX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="container">
+    <main class="contenedor">
         <h1>Aplicación del Tiempo</h1>
         <p>Elige una comunidad y una provincia para ver el pronóstico del tiempo en los próximos 5 días.</p>
 
-        <div class="controls">
-            <label for="comunidad">Comunidad:</label>
-            <select id="comunidad">
-                <option value="">Seleccione una comunidad</option>
-            </select>
-
-            <label for="provincia">Provincia:</label>
-            <select id="provincia">
-                <option value="">Seleccione una provincia</option>
-            </select>
+        <div class="controles">
+            <div id="menu-comunidades" class="menu" aria-label="Menú de comunidades y provincias"></div>
         </div>
 
         <div id="tarjeta-tiempo" class="tarjeta"></div>

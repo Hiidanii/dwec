@@ -1,11 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Aplicación para ver el tiempo que hará en las provincias autónomas de España en los proximos 5 días, 
-    // donde se eligira la comunidad autónoma y luego la provincia autónoma de la comunidad seleccionada, y se mostrará la información del tiempo en una tarjeta.
-    
-    // API key de OpenWeatherMap
+    // Clave de API para OpenWeatherMap
     const API_KEY = 'cc8763c36951c92f70753bfe04619379';
 
-    // Mapeo de comunidades autónomas a sus provincias
+    // Mapa de comunidades autónomas a sus provincias.
     const comunidades = {
         'Andalucía': ['Sevilla', 'Málaga', 'Cádiz', 'Córdoba', 'Granada', 'Huelva', 'Jaén', 'Almería'],
         'Cataluña': ['Barcelona', 'Girona', 'Lleida', 'Tarragona'],
@@ -26,90 +23,148 @@ document.addEventListener("DOMContentLoaded", function() {
         'Región de Murcia': ['Murcia']
     };
 
-    const comunidadSelect = document.getElementById('comunidad');
-    const provinciaSelect = document.getElementById('provincia');
-    const tarjetaTiempo = document.getElementById('tarjeta-tiempo');
-    const comunidadDropdown = document.getElementById('comunidad-dropdown');
-    const provinciaDropdown = document.getElementById('provincia-dropdown');
+    // Nodos DOM raíz
+    const tarjetaTiempo = document.getElementById('tarjeta-tiempo'); // contenedor para las tarjetas del tiempo
+    const menuCont = document.getElementById('menu-comunidades'); // contenedor del menú de comunidades
 
-    // Rellenar el select de comunidades autónomas
-    comunidadSelect.innerHTML = '<option value="">Seleccione una comunidad</option>';
-    for (let comunidad in comunidades) {
-        let option = document.createElement('option');
-        option.value = comunidad;
-        option.textContent = comunidad;
-        comunidadSelect.appendChild(option);
+    // Construye el menú de comunidades (un botón por comunidad con una sublista de provincias).
+    // Cada elemento de provincia añade un listener que dispara la petición del tiempo.
+    function buildMenu(map) {
+        if (!menuCont) return;
+        menuCont.innerHTML = '';
+        const ul = document.createElement('ul');
+        ul.className = 'lista-menu';
+
+        Object.keys(map).forEach(comunidad => {
+            const li = document.createElement('li');
+            li.className = 'item-comunidad';
+
+            const title = document.createElement('button');
+            title.type = 'button';
+            title.className = 'boton-comunidad';
+            title.textContent = comunidad;
+
+            const sub = document.createElement('ul');
+            sub.className = 'sublista';
+
+            // Crea un elemento de lista por cada provincia y le añade el click para pedir datos
+            map[comunidad].forEach(prov => {
+                const pli = document.createElement('li');
+                pli.className = 'item-provincia';
+                pli.dataset.province = prov;
+                pli.textContent = prov;
+                pli.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const provincia = this.dataset.province;
+                    // Solicita el tiempo para la provincia clicada
+                    fetchWeatherForProvince(provincia);
+                    // Retroalimentación visual: marcar la provincia activa
+                    document.querySelectorAll('.item-provincia.activa').forEach(n => n.classList.remove('activa'));
+                    this.classList.add('activa');
+                });
+                sub.appendChild(pli);
+            });
+
+            // Hacer clic en el botón de comunidad alterna la visibilidad de su sublista
+            title.addEventListener('click', function(e) {
+                e.stopPropagation();
+                li.classList.toggle('abierta');
+            });
+
+            li.appendChild(title);
+            li.appendChild(sub);
+            ul.appendChild(li);
+        });
+
+        menuCont.appendChild(ul);
+
+        // Cierra cualquier sublista abierta al hacer clic fuera del menú
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.item-comunidad.abierta').forEach(n => n.classList.remove('abierta'));
+        });
     }
 
-    // Construir dropdowns visuales sincronizados con los selects
-    buildDropdown(comunidadSelect, comunidadDropdown);
-    buildDropdown(provinciaSelect, provinciaDropdown);
+    // Solicita el pronóstico para una provincia y muestra un skeleton mientras espera.
+    function fetchWeatherForProvince(provincia) {
+        if (!provincia) return;
+        // Limpia el contenido anterior y muestra marcadores de carga (skeleton)
+        tarjetaTiempo.innerHTML = '';
+        const skeleton = document.createElement('div');
+        skeleton.className = 'esqueleto-lista';
+        for (let s = 0; s < 3; s++) {
+            const sc = document.createElement('div'); sc.className = 'esqueleto-tarjeta'; skeleton.appendChild(sc);
+        }
+        tarjetaTiempo.appendChild(skeleton);
 
-    // Evento para actualizar las provincias cuando se selecciona una comunidad
-    comunidadSelect.addEventListener('change', function() {
-        provinciaSelect.innerHTML = '<option value="">Seleccione una provincia</option>';
-        let provincias = comunidades[this.value];
-        if (provincias) {
-            provincias.forEach(function(provincia) {
-                let option = document.createElement('option');
-                option.value = provincia;
-                option.textContent = provincia;
-                provinciaSelect.appendChild(option);
+        // Construye la URL del endpoint 5-day/3-hour de OpenWeatherMap para la provincia seleccionada
+        const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(provincia)},ES&appid=${API_KEY}&units=metric&lang=es`;
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error(response.status + ' ' + response.statusText);
+                return response.json();
+            })
+            .then(data => mostrarTiempo(data))
+            .catch(error => {
+                // Muestra un error legible para el usuario y registra detalles técnicos en consola
+                tarjetaTiempo.innerHTML = `<p class="error">Error al obtener los datos del tiempo: ${error.message}</p>`;
+                console.error('Error al obtener los datos del tiempo:', error);
             });
-            // Reconstruir dropdown de provincias cuando cambie la comunidad
-            buildDropdown(provinciaSelect, provinciaDropdown);
-        }
-    });
+    }
 
-    // Evento para obtener y mostrar el tiempo cuando se selecciona una provincia
-    provinciaSelect.addEventListener('change', function() {
-        let provincia = this.value;
-        if (provincia) {
-            const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(provincia)},ES&appid=${API_KEY}&units=metric&lang=es`;
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) throw new Error(response.status + ' ' + response.statusText);
-                    return response.json();
-                })
-                .then(data => mostrarTiempo(data))
-                .catch(error => {
-                    tarjetaTiempo.innerHTML = `<p class="error">Error al obtener los datos del tiempo: ${error.message}</p>`;
-                    console.error('Error al obtener los datos del tiempo:', error);
-                });
-        }
-    });
-
-    // Función para mostrar el tiempo en la tarjeta
+    // Renderiza la respuesta de la API en tarjetas visuales.
+    // La API devuelve pronósticos cada 3 horas; aquí seleccionamos cada 8º elemento (~24h) para generar tarjetas diarias.
     function mostrarTiempo(data) {
-        tarjetaTiempo.innerHTML = ''; // Limpiar la tarjeta
+        tarjetaTiempo.innerHTML = ''; // limpiar skeleton o contenido previo
 
         if (data.cod !== "200") {
+            // Error devuelto por la API (p. ej. ciudad no encontrada)
             tarjetaTiempo.innerHTML = `<p>Error al obtener los datos del tiempo: ${data.message}</p>`;
             return;
         }
 
-        // Mostrar el pronóstico para los próximos 5 días (cada 8 horas)
+        // Itera la lista eligiendo una entrada por día (aprox.)
         for (let i = 0; i < data.list.length; i += 8) {
             let pronostico = data.list[i];
             let fecha = new Date(pronostico.dt * 1000);
-            // Obtener código de icono y URL (OpenWeatherMap)
-            const iconCode = pronostico.weather && pronostico.weather[0] ? pronostico.weather[0].icon : null;
+
+            // Acceso defensivo al array weather
+            const weather = pronostico.weather && pronostico.weather[0] ? pronostico.weather[0] : {description: '', icon: '', main: ''};
+            const iconCode = weather.icon;
             const iconUrl = iconCode ? `https://openweathermap.org/img/wn/${iconCode}@2x.png` : '';
 
+            // Mapea una clase de condición simplificada a partir de weather.main para propósitos de estilo.
+            // Esto es intencionalmente simple; usar weather.id daría un mapeo más preciso si se requiere.
+            const mainCond = weather.main ? weather.main.toLowerCase() : '';
+            let condClass = 'unknown';
+            if (mainCond.includes('clear')) condClass = 'clear';
+            else if (mainCond.includes('rain') || mainCond.includes('drizzle')) condClass = 'rain';
+            else if (mainCond.includes('cloud')) condClass = 'clouds';
+            else if (mainCond.includes('snow')) condClass = 'snow';
+            else if (mainCond.includes('thunder')) condClass = 'storm';
+
+            const feels = pronostico.main && pronostico.main.feels_like ? Math.round(pronostico.main.feels_like) : null;
+
+            // Construye el HTML de la tarjeta. Contenido a la izquierda, icono a la derecha (estilado en CSS).
             let card = document.createElement('div');
-            card.className = 'card';
+            card.className = `tarjeta-item ${condClass}`;
             card.innerHTML = `
-                <div class="card-header">
-                    ${iconUrl ? `<img src="${iconUrl}" alt="${pronostico.weather[0].description}" class="weather-icon">` : ''}
-                    <div>
-                        <h3>${diaSemana(fecha)} (${fecha.toLocaleDateString()})</h3>
-                        <h4>${fecha.toLocaleTimeString()}</h4>
+                <div class="contenido">
+                    <div class="cabecera-tarjeta">
+                        <div>
+                            <h3>${diaSemana(fecha)} (${fecha.toLocaleDateString()})</h3>
+                            <h4 style="text-transform: capitalize;">${fecha.toLocaleTimeString()} - ${weather.description || ''}</h4>
+                        </div>
+                    </div>
+                    <div class="cuerpo-tarjeta">
+                        <div class="temp-grande">${Math.round(pronostico.main.temp)}°C ${feels ? `<small class="sensacion">Sensación ${feels}°C</small>` : ''}</div>
+                        <div class="datos">
+                            <span>💧 ${pronostico.main.humidity}%</span>
+                            <span>·</span>
+                            <span>🌬️ ${pronostico.wind.speed} m/s</span>
+                        </div>
                     </div>
                 </div>
-                <p>Temperatura: ${pronostico.main.temp} °C</p>
-                <p style="text-transform: capitalize;">Clima: ${pronostico.weather[0].description}</p>
-                <p>Humedad: ${pronostico.main.humidity}%</p>
-                <p>Viento: ${pronostico.wind.speed} m/s</p>
+                ${iconUrl ? `<img src="${iconUrl}" alt="${weather.description}" class="icono-tiempo">` : ''}
             `;
             tarjetaTiempo.appendChild(card);
         }
@@ -121,55 +176,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return dias[fecha.getDay()];
     }
 
-    // ===== Dropdown personalizado: construye UI visible y sincroniza con el select escondido =====
-    function buildDropdown(selectEl, containerEl) {
-        if (!containerEl) return;
-        containerEl.innerHTML = '';
-
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'dropdown-button';
-        const selectedOption = selectEl.options[selectEl.selectedIndex];
-        button.textContent = selectedOption ? selectedOption.text : 'Seleccione';
-
-        const menu = document.createElement('ul');
-        menu.className = 'dropdown-menu';
-
-        Array.from(selectEl.options).forEach(opt => {
-            const li = document.createElement('li');
-            li.className = 'dropdown-item';
-            li.dataset.value = opt.value;
-            li.textContent = opt.text;
-            if (!opt.value) li.classList.add('placeholder');
-            li.addEventListener('click', function(e) {
-                e.stopPropagation();
-                selectEl.value = this.dataset.value;
-                // actualizar texto del botón
-                button.textContent = this.textContent;
-                // disparar evento change para reutilizar la lógica existente
-                selectEl.dispatchEvent(new Event('change'));
-                containerEl.classList.remove('open');
-            });
-            menu.appendChild(li);
-        });
-
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            containerEl.classList.toggle('open');
-        });
-
-        // Actualizar botón cuando el select cambie por código
-        selectEl.addEventListener('change', function() {
-            const opt = selectEl.options[selectEl.selectedIndex];
-            button.textContent = opt ? opt.text : 'Seleccione';
-        });
-
-        containerEl.appendChild(button);
-        containerEl.appendChild(menu);
-    }
-
-    // Cerrar dropdowns al hacer clic fuera
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
-    });
+    // Construir menú al inicio
+    buildMenu(comunidades);
 });
